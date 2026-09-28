@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seven Steps of Moral Reasoning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff5f8; --blush:#fbd9e3; --rose:#d97a9b; --rose-deep:#a83f66;
+  --lilac:#e8dcf7; --mint:#dcf1e8; --peach:#ffe6d5; --ink:#4a2f3d; --soft:#7d6072;
+  --card:rgba(255,255,255,.72);
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{
+  font-family:"Quicksand",system-ui,sans-serif; color:var(--ink);
+  background:linear-gradient(135deg,#fff5f8 0%,#f7ecfb 55%,#e9f6f0 100%);
+  overflow:hidden;
+}
+h1,h2{font-family:"DM Serif Display",Georgia,serif;font-weight:400;line-height:1.1}
+
+/* floating background */
+.blob{position:fixed;border-radius:50%;filter:blur(50px);opacity:.55;z-index:0;animation:drift 16s ease-in-out infinite alternate}
+.b1{width:340px;height:340px;background:var(--blush);top:-90px;left:-70px}
+.b2{width:300px;height:300px;background:var(--lilac);bottom:-80px;right:-60px;animation-delay:-5s}
+.b3{width:220px;height:220px;background:var(--peach);top:45%;left:60%;animation-delay:-9s}
+@keyframes drift{to{transform:translate(40px,30px) scale(1.12)}}
+.petal{position:fixed;top:-30px;color:var(--rose);opacity:.35;z-index:0;pointer-events:none;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+
+/* slides */
+.deck{position:relative;z-index:1;height:100%}
+.slide{
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:28px 24px 96px;opacity:0;visibility:hidden;transform:translateX(40px);
+  transition:opacity .5s ease,transform .5s ease,visibility .5s;
+}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.slide.past{transform:translateX(-40px)}
+.wrap{width:min(860px,100%);max-height:100%;overflow-y:auto;padding:4px}
+
+.step-badge{
+  display:inline-grid;place-items:center;width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blush),var(--lilac));color:var(--rose-deep);
+  font-family:"DM Serif Display",serif;font-size:1.6rem;margin-bottom:14px;
+  box-shadow:0 6px 18px rgba(217,122,155,.25);
+}
+h2{font-size:clamp(1.8rem,4.5vw,2.8rem);margin-bottom:6px}
+.ask{color:var(--rose-deep);font-weight:600;margin-bottom:22px;font-size:1.05rem}
+.card{
+  background:var(--card);border:1.5px solid var(--blush);border-radius:26px;padding:24px 28px;
+  backdrop-filter:blur(8px);box-shadow:0 10px 30px rgba(168,63,102,.08);
+}
+.card p{line-height:1.65;font-size:1.05rem}
+.card p + p{margin-top:12px}
+
+/* title */
+.title h1{font-size:clamp(2.4rem,7vw,4.4rem);color:var(--rose-deep);margin-bottom:14px}
+.title p{color:var(--soft);font-size:1.15rem;max-width:520px;margin:0 auto}
+.title .wrap{text-align:center}
+.scenario{display:inline-block;margin-top:26px;padding:14px 22px;border-radius:22px;background:var(--card);border:1.5px dashed var(--rose);font-weight:600}
+.hint{margin-top:18px;font-size:.9rem;color:var(--soft);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.4}}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.chip{padding:9px 18px;border-radius:999px;font-weight:600;font-size:.98rem;background:var(--lilac);transition:transform .25s}
+.chip:nth-child(3n+2){background:var(--blush)}
+.chip:nth-child(3n){background:var(--mint)}
+.chip:hover{transform:translateY(-4px) rotate(-2deg)}
+
+/* option cards */
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.opt{
+  background:var(--card);border:1.5px solid var(--blush);border-radius:22px;padding:16px 20px;
+  cursor:pointer;transition:transform .25s,box-shadow .25s,background .25s;
+}
+.opt:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(168,63,102,.14)}
+.opt summary{list-style:none;font-weight:700;display:flex;justify-content:space-between;gap:10px}
+.opt summary::-webkit-details-marker{display:none}
+.opt summary::after{content:"✿";color:var(--rose);transition:transform .35s}
+.opt[open]{background:#fff;border-color:var(--rose)}
+.opt[open] summary::after{transform:rotate(180deg)}
+.opt .more{margin-top:10px;font-size:.97rem;line-height:1.55;color:var(--soft);animation:pop .35s ease}
+@keyframes pop{from{opacity:0;transform:translateY(-6px)}}
+.tag{display:inline-block;margin-top:8px;padding:3px 12px;border-radius:999px;font-size:.82rem;font-weight:700}
+.good{background:var(--mint);color:#2f6b52}
+.mid{background:var(--peach);color:#9a5a2b}
+.bad{background:var(--blush);color:var(--rose-deep)}
+
+.decision{font-size:1.2rem;line-height:1.7;text-align:center}
+.decision strong{color:var(--rose-deep)}
+.plan{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:18px}
+
+/* nav */
+.nav{position:fixed;bottom:22px;left:0;right:0;z-index:5;display:flex;justify-content:center;align-items:center;gap:18px}
+.btn{
+  width:46px;height:46px;border-radius:50%;border:1.5px solid var(--blush);background:#fff;color:var(--rose-deep);
+  font-size:1.2rem;cursor:pointer;transition:transform .2s,background .2s;
+}
+.btn:hover{background:var(--blush);transform:scale(1.1)}
+.btn:disabled{opacity:.35;cursor:default;transform:none}
+.btn:focus-visible,.opt:focus-visible,.dot:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
+.dots{display:flex;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;border:0;background:var(--blush);cursor:pointer;transition:all .3s}
+.dot.on{background:var(--rose);width:26px;border-radius:999px}
+
+@media(max-width:640px){
+  .opts{grid-template-columns:1fr}
+  .card{padding:18px 20px}
+  .dots{gap:5px}.dot{width:8px;height:8px}.dot.on{width:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .petal{display:none}
+}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+<main class="deck" id="deck">
+
+  <section class="slide title">
+    <div class="wrap">
+      <h1>Seven Steps of Moral Reasoning</h1>
+      <p>Using Scott Rae's framework to work through a tough choice.</p>
+      <div class="scenario">You witness a classmate cheating on an online exam. Do you report it or stay silent?</div>
+      <p class="hint">Use the arrows, swipe, or your keyboard to begin ✿</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="wrap">
+      <div class="step-badge">1</div>
+      <h2>Gather the Facts</h2>
+      <p class="ask">What happened? Is there a clear ethical issue?</p>
+      <div class="card">
+        <p>During an online exam, I see a classmate using notes or another device when they shouldn't.</p>
+        <p>I don't know their full situation, but the issue is clear: this is academic dishonesty.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="wrap">
+      <div class="step-badge">2</div>
+      <h2>Determine the Ethical Issues</h2>
+      <p class="ask">What are the moral concerns involved?</p>
+      <div class="card">
+        <p>Several values pull in different directions here.</p>
+        <div class="chips">
+          <span class="chip">Fairness to honest students</span>
+          <span class="chip">Honesty and integrity</span>
+          <span class="chip">Loyalty to a classmate</span>
+          <span class="chip">Responsibility to my school</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="wrap">
+      <div class="step-badge">3</div>
+      <h2>Choose Relevant Principles</h2>
+      <p class="ask">What ethical values or principles apply?</p>
+      <div class="card">
+        <p>These are the values I want my decision to respect.</p>
+        <div class="chips">
+          <span class="chip">Honesty</span>
+          <span class="chip">Fairness</span>
+          <span class="chip">Responsibility</span>
+          <span class="chip">Compassion</span>
+          <span class="chip">Respect for rules</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="wrap">
+      <div class="step-badge">4</div>
+      <h2>List the Alternatives</h2>
+      <p class="ask">What choices do I have? (Tap a card to open it)</p>
+      <div class="opts">
+        <details class="opt"><summary>A. Report it to the teacher</summary><p class="more">I tell the teacher directly what I saw.</p></details>
+        <details class="opt"><summary>B. Stay silent</summary><p class="more">I say nothing and focus on my own exam.</p></details>
+        <details class="opt"><summary>C. Talk to the classmate first</summary><p class="more">I speak with them privately and ask them to make it right.</p></details>
+        <details class="opt"><summary>D. Report anonymously</summary><p class="more">I let the teacher know without giving my name.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="wrap">
+      <div class="step-badge">5</div>
+      <h2>Compare Alternatives with Principles</h2>
+      <p class="ask">Which options align with ethical values? (Tap to see)</p>
+      <div class="opts">
+        <details class="opt"><summary>Stay silent</summary><p class="more">Conflicts with fairness and honesty. It only protects loyalty.</p><span class="tag bad">Weak fit</span></details>
+        <details class="opt"><summary>Report it</summary><p class="more">Upholds fairness and honesty, but may cost loyalty and compassion.</p><span class="tag mid">Partial fit</span></details>
+        <details class="opt"><summary>Talk to them first</summary><p class="more">Balances honesty with compassion and gives them a chance to correct it.</p><span class="tag good">Strong fit</span></details>
+        <details class="opt"><summary>Report anonymously</summary><p class="more">Protects fairness, and shields me from conflict, but skips the chance to help.</p><span class="tag mid">Partial fit</span></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="wrap">
+      <div class="step-badge">6</div>
+      <h2>Assess the Consequences</h2>
+      <p class="ask">What are the possible outcomes of each choice? (Tap to see)</p>
+      <div class="opts">
+        <details class="opt"><summary>If I report</summary><p class="more">The classmate may be penalized and the friendship strained, but grades stay fair.</p></details>
+        <details class="opt"><summary>If I stay silent</summary><p class="more">No conflict for me, but the unfairness continues and cheating may spread.</p></details>
+        <details class="opt"><summary>If I talk first</summary><p class="more">It could be resolved kindly, or they might ignore me and I'd need a next step.</p></details>
+        <details class="opt"><summary>If I report anonymously</summary><p class="more">Fairness is protected, but the classmate never hears from me directly.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="wrap">
+      <div class="step-badge">7</div>
+      <h2 style="text-align:center">Make a Decision</h2>
+      <p class="ask" style="text-align:center">What will I do and why?</p>
+      <div class="card decision">
+        <p>I would <strong>talk to my classmate privately first</strong>. If they refuse to stop, I would <strong>report it to the teacher</strong>.</p>
+        <p>Fairness matters to everyone taking the exam, and I believe people deserve a chance to fix their mistake.</p>
+        <div class="plan">
+          <span class="chip">Talk first</span>
+          <span class="chip">Give a chance</span>
+          <span class="chip">Report if needed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="nav" aria-label="Slide navigation">
+  <button class="btn" id="prev" aria-label="Previous slide">←</button>
+  <div class="dots" id="dots"></div>
+  <button class="btn" id="next" aria-label="Next slide">→</button>
+</nav>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var dotsBox = document.getElementById('dots');
+  var prev = document.getElementById('prev');
+  var next = document.getElementById('next');
+  var i = 0;
+
+  slides.forEach(function(_, n){
+    var d = document.createElement('button');
+    d.className = 'dot';
+    d.setAttribute('aria-label', 'Go to slide ' + (n + 1));
+    d.onclick = function(){ go(n); };
+    dotsBox.appendChild(d);
+  });
+  var dots = dotsBox.children;
+
+  function go(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function(s, k){
+      s.classList.toggle('active', k === i);
+      s.classList.toggle('past', k < i);
+      dots[k].classList.toggle('on', k === i);
+    });
+    prev.disabled = i === 0;
+    next.disabled = i === slides.length - 1;
+    if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+  }
+
+  prev.onclick = function(){ go(i - 1); };
+  next.onclick = function(){ go(i + 1); };
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') go(i + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(i - 1);
+  });
+
+  var x0 = null;
+  document.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 60) go(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+
+  // gentle falling petals
+  for (var p = 0; p < 9; p++){
+    var el = document.createElement('span');
+    el.className = 'petal';
+    el.textContent = p % 2 ? '✿' : '❀';
+    el.style.left = (Math.random() * 100) + 'vw';
+    el.style.fontSize = (12 + Math.random() * 14) + 'px';
+    el.style.animationDuration = (16 + Math.random() * 14) + 's';
+    el.style.animationDelay = (-Math.random() * 20) + 's';
+    document.body.appendChild(el);
+  }
+
+  var start = parseInt(location.hash.slice(1), 10);
+  go(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>
